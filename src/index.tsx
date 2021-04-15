@@ -2,7 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
-const Square = (props) => {
+interface SquarePropsInterface {
+  value: string;
+  onClick: () => void
+}
+const Square = (props: SquarePropsInterface) => {
   return (
     <button className="square" onClick={props.onClick}>
       {props.value}
@@ -10,8 +14,12 @@ const Square = (props) => {
   );
 };
 
-const Board = (props) => {
-  const renderSquare = (i) => {
+interface BoardPropsInterface {
+  squares: string[];
+  onClick: (i:number) => void
+}
+const Board = (props: BoardPropsInterface) => {
+  const renderSquare = (i: number) => {
     return <Square value={props.squares[i]} onClick={() => props.onClick(i)} />;
   };
   return (
@@ -35,8 +43,16 @@ const Board = (props) => {
   );
 };
 
-class Game extends React.Component {
-  constructor(props) {
+type History = {
+  squares : string[]
+}
+interface GamePropsInterface {
+  history: History[]
+  stepNumber: number
+  xIsNext: boolean
+}
+class Game extends React.Component<{}, GamePropsInterface> {
+  constructor(props: GamePropsInterface) {
     super(props);
     this.state = {
       history: [
@@ -48,7 +64,7 @@ class Game extends React.Component {
       xIsNext: true,
     };
   }
-  handleClick(i) {
+  handleClick(i: number) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice(); // slice()で配列コピー
@@ -66,7 +82,7 @@ class Game extends React.Component {
       xIsNext: !this.state.xIsNext,
     });
   }
-  jumpTo(step) {
+  jumpTo(step: number) {
     this.setState({
       stepNumber: step,
       xIsNext: step % 2 === 0,
@@ -113,7 +129,7 @@ class Game extends React.Component {
   }
 }
 
-function calculateWinner(squares) {
+function calculateWinner(squares: string[]) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
